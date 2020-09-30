@@ -17,6 +17,7 @@ namespace OidcApi.Web
         }
 
         public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -46,6 +47,18 @@ namespace OidcApi.Web
                 options.AddPolicy("trainer", policy => { policy.Requirements.Add(new RolesAuthorizationRequirement(new[] { "trainer" })); });
             });
             
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder
+                            .WithOrigins("http://localhost:8080", "http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+            
             services.AddControllers();
         }
 
@@ -61,6 +74,8 @@ namespace OidcApi.Web
 
             app.UseRouting();
 
+            app.UseCors(MyAllowSpecificOrigins);
+            
             app.UseAuthentication();
             app.UseAuthorization();
 

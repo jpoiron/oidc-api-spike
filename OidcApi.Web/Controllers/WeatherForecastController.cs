@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace OidcApi.Web.Controllers
 {
     [ApiController]
-    [Authorize("trainer")]
+    [Authorize]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
